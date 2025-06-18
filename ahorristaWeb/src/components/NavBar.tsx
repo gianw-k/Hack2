@@ -1,21 +1,28 @@
-import { Link } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
-export default function NavBar() {
-  const { logout, email } = useAuth()
+const NavBar: React.FC = () => {
+  const { user, logout } = useAuth();
+  const nav = useNavigate();
+
+  const onLogout = () => {
+    logout();
+    nav('/login');
+  };
+
   return (
-    <nav className="flex gap-4 p-4 bg-blue-500 text-white">
-      <Link to="/" className="font-bold mr-auto">
-        Ahorrista
-      </Link>
-      {email && (
-        <>
+    <nav className="flex justify-between p-4 bg-white shadow">
+      <Link to="/" className="font-bold text-lg">Ahorrista</Link>
+      {user && (
+        <div className="space-x-4">
+          <Link to="/">Dashboard</Link>
           <Link to="/goals">Metas</Link>
-          <button onClick={logout} className="ml-4 underline">
-            Cerrar sesión
-          </button>
-        </>
+          <button onClick={onLogout} className="text-red-600">Salir</button>
+        </div>
       )}
     </nav>
-  )
-}
+  );
+};
+
+export default NavBar;
